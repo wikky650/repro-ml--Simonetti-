@@ -1,4 +1,0 @@
-numpy==VERSION
-pandas==VERSION
-scikit-learn==VERSION
-mlflow==VERSION
