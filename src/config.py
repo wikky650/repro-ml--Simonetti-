@@ -30,7 +30,7 @@ COLS_CAT = [                  # columnas categóricas que usará el modelo
             "lleva_libros_contables",
             "tiene_ocupacion_secundaria"
             ]
-CODIGOS_FALTANTES = [99, 9999]  # códigos que significan "sin dato" (p. ej., 99, 9999)
+CODIGOS_FALTANTES = []          # códigos que significan "sin dato" (p. ej., 99, 9999)
 
 MODELO = "arbol"                # el algoritmo asignado: "lineal", "knn", "arbol", "rf" o "svm"
 
