@@ -1,12 +1,12 @@
-# Pipeline de ML reproducible · NOMBRE DEL PROYECTO
+# Pipeline de ML reproducible · REPRO-ML--SIMONETTI-
 
 Machine Learning I · Proyecto Integrador · Entregable individual
-Alumno(a): NOMBRE · Grupo: N · Algoritmo asignado: MODELO
+Alumno(a): Luis Emilio · Grupo: 2 · Algoritmo asignado: Árbol de Decisión
 
 **Resumen:** QUÉ predice el modelo, con QUÉ dataset peruano (fuente) y cuántas filas.
 
 ## Cómo reproducir
-Probado con **Python X.Y.Z** en SISTEMA OPERATIVO.
+Probado con **Python 3.13.3** en Windows (PowerShell).
 
 macOS / Linux:
 ```bash
@@ -30,46 +30,67 @@ python -m src.run_seeds
 
 ## Resultado esperado
 Una corrida (`--seed 42`):
+```json
+{
+  "seed": 42,
+  "modelo": "arbol",
+  "mae": 595.47,
+  "rmse": 1136.87,
+  "r2": 0.061
+}
 ```
-PEGAR AQUÍ LA SALIDA JSON
-```
-Cinco semillas (`results/results_summary.csv`): PEGAR LA TABLA.
+Cinco semillas (`results/results_summary.csv`):
 
-**Resultado reportado:** MÉTRICA = media ± DE entre 5 semillas (baseline: …).
+| seed | modelo | mae_mean | mae_sd | rmse_mean | rmse_sd | r2_mean | r2_sd |
+|---|---|---|---|---|---|---|---|
+| 0 | baseline | 631.06 | 67.27 | 1232.92 | 162.80 | -0.0958 | 0.0218 |
+| 1 | baseline | 631.11 | 40.24 | 1229.41 | 193.38 | -0.1014 | 0.0314 |
+| 2 | baseline | 630.99 | 47.19 | 1229.19 | 196.00 | -0.0982 | 0.0126 |
+| 3 | baseline | 630.90 | 49.57 | 1230.50 | 184.42 | -0.0977 | 0.0059 |
+| 42 | baseline | 631.33 | 26.57 | 1238.09 | 100.72 | -0.0955 | 0.0131 |
+| 0 | arbol | 605.43 | 56.38 | 1178.10 | 209.90 | 0.0044 | 0.1419 |
+| 1 | arbol | 614.57 | 16.40 | 1260.45 | 105.52 | -0.2562 | 0.5764 |
+| 2 | arbol | 620.68 | 46.42 | 1262.40 | 197.82 | -0.2470 | 0.5945 |
+| 3 | arbol | 611.21 | 46.34 | 1200.35 | 146.35 | -0.0817 | 0.2689 |
+| 42 | arbol | 595.47 | 17.46 | 1136.87 | 69.66 | 0.0610 | 0.1746 |
+
+**Resultado reportado:** MAE = 609.47 ± 9.58 (baseline: 631.08 ± 0.16).
 
 ![Corridas en MLflow](docs/mlflow.png)
 
 ## Estructura de datos (data lake)
 | Zona | Carpeta | Contenido | Regla |
 |---|---|---|---|
-| raw (bronze) | `data/raw/` | Archivo original | Nunca se edita |
-| processed (silver) | `data/processed/` | Datos limpios | Se regenera con `src.prepare_data` |
-| results (gold) | `results/` | Métricas | Se regenera con `src.run_seeds` |
+| raw (bronze) | `data/raw/` | Archivo original (md5: 79cb9c9fcccd760795c3a28fdc8b35e3) | Nunca se edita |
+| processed (silver) | `data/processed/` | Datos limpios (4,765 filas) | Se regenera con `src.prepare_data` |
+| results (gold) | `results/` | Métricas y registros MLflow (mlflow.db) | Se regenera con `src.run_seeds` |
 
 Ver `data/MANIFIESTO.md`.
 
 ## Qué lo hace reproducible
 | Requisito | Cómo se cumple |
 |---|---|
-| ≥ 6 commits | |
-| Sin fuga de datos | |
-| Aleatoriedad fija | |
-| 5 semillas en MLflow, media ± DE | |
-| Mismos datos para todos | |
-| Entorno exacto | |
+| ≥ 6 commits | Sincronización continua de .gitignore, requirements.txt y scripts en el repositorio remoto. |
+| Sin fuga de datos | Separación estricta entre conjuntos de entrenamiento y prueba durante el preprocesamiento. |
+| Aleatoriedad fija | Uso de PYTHONHASHSEED=0 y semillas fijas (--seed 42). |
+| 5 semillas en MLflow, media ± DE | Registro automatizado de múltiples semillas mediante el script de corridas. |
+| Mismos datos para todos | Verificación mediante hash MD5 del archivo raw (79cb9c9fcccd760795c3a28fdc8b35e3). |
+| Entorno exacto | Versiones fijadas en requirements.txt (numpy==2.3.4, pandas==2.3.3, scikit-learn==1.9.1, mlflow==3.18.0). |
 
 ## Prueba del extraño
 Quién la hizo (nombre y grupo), enlace al Issue y resultado.
 
 ## Limitaciones
+- Sensibilidad a diferencias en los saltos de línea (CRLF vs LF) al clonar repositorios en diferentes sistemas operativos (Windows y Linux).
+- Dependencia del comportamiento determinista de las versiones específicas de las librerías instaladas en el entorno virtual.
 
 ## Respuestas
-1. …
-2. …
-3. …
-4. …
-5. …
-6. …
+1. El control estricto de semillas y de la variable `PYTHONHASHSEED` garantiza que la aleatoriedad en la inicialización y división de datos sea exactamente idéntica en cada ejecución.
+2. La separación de zonas en el data lake (`raw`, `processed`, `results`) asegura la trazabilidad y evita la modificación accidental de los datos originales.
+3. El uso del hash MD5 permite verificar de forma criptográfica que todos los integrantes del equipo utilicen exactamente el mismo archivo fuente sin alterations.
+4. El modelo de árbol de decisión muestra una mejora marginal frente al baseline, reflejando las características de linealidad y dispersión del dataset de ENAHO.
+5. El registro de métricas con MLflow en formato local permite auditar las corridas de múltiples semillas de manera estructurada y persistente.
+6. La automatización mediante scripts modulares (`prepare_data`, `train`, `run_seeds`) elimina la intervención manual propensa a errores humanos durante la experimentación.
 
 ## Declaración de uso de IA
-Qué herramienta de IA se usó, para qué y qué revisó o ejecutó el autor. Si no se usó, indicarlo.
+Se utilizó Gemini como herramienta de asistencia para estructurar el entorno virtual en PowerShell, resolver incidencias de dependencias y configurar correctamente el archivo .gitignore y el pipeline de reproducibilidad. El autor ejecutó, verificó y validó personalmente cada comando y archivo de código.
