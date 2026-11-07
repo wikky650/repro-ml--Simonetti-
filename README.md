@@ -85,7 +85,48 @@ Sebastian Huanuco, grupo 2, enlace al Issue: [ (#1) ](https://github.com/wikky65
 - Sensibilidad a diferencias en los saltos de línea (CRLF vs LF) al clonar repositorios en diferentes sistemas operativos (Windows y Linux).
 - Dependencia del comportamiento determinista de las versiones específicas de las librerías instaladas en el entorno virtual.
 
+## ANÁLIS COMPARATIVO -- BASELINE VS ÁRBOL DE DECISIÓN
+
+### 1. RESUMEN GLOBAL
+* **Baseline:**
+  * **MAE Promedio:** 631.08
+  * **RMSE Promedio:** 1232.02
+  * **$R^2$ Promedio:** -0.0977
+* **Árbol de Decisión (`arbol`):**
+  * **MAE Promedio:** 609.47
+  * **RMSE Promedio:** 1207.63
+  * **$R^2$ Promedio:** -0.1039
+
+---
+
+### COMPARACIÓN DE SEMILLAS
+* **Seed 0:**
+  * Baseline: 631.06
+  * Árbol: 605.43 *(Mejora de 25.63)*
+* **Seed 1:**
+  * Baseline: 631.11
+  * Árbol: 614.57 *(Mejora de 16.54)*
+* **Seed 2:**
+  * Baseline: 630.99
+  * Árbol: 620.68 *(Mejora de 10.31)*
+* **Seed 3:**
+  * Baseline: 630.90
+  * Árbol: 611.21 *(Mejora de 19.69)*
+* **Seed 42:**
+  * Baseline: 631.33
+  * Árbol: 595.47 *(Mejora de 35.86)*
+
+---
+
+### 3. Conclusiones Clave
+1. **Superación consistente en MAE:** El modelo de árbol de decisión supera al baseline en las 5 semillas evaluadas, logrando reducir el Error Absoluto Medio (MAE) de forma estable (promedio global de 609.47 frente a los 631.08 del baseline).
+2. **Comportamiento del RMSE:** En la raíz del error cuadrático medio (`rmse_mean`), el árbol también obtiene un mejor rendimiento global y reduce el error en las semillas **0, 3 y 42**.
+3. **Coeficiente de Determinación ($R^2$):** Aunque ambos presentan dificultades generales con la varianza total, el árbol logra superar la barrera negativa en las semillas **0 ($R^2 = 0.0044$)** y **42 ($R^2 = 0.0610$)**.
+
+---
+
 ## PREGUNTAS Y RESPUESTAS
+
 ### 1. ¿Por qué el imputador y el escalador están dentro del Pipeline y no se aplican a todo el dataset antes de la validación cruzada?
 Porque aplicarlos antes a todo el dataset provocaría **fuga de información (*data leakage*)**, ya que estadísticas como la mediana o la media del conjunto de prueba influirían en el entrenamiento. Al integrarlos dentro del Pipeline, cada transformador se ajusta exclusivamente con los datos de entrenamiento de cada *fold*, garantizando una evaluación real, objetiva y sin sesgos optimistas.
 
