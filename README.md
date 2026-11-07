@@ -3,7 +3,7 @@
 Machine Learning I · Proyecto Integrador · Entregable individual
 Alumno(a): Luis Emilio · Grupo: 2 · Algoritmo asignado: Árbol de Decisión
 
-**Resumen:** QUÉ predice el modelo, con QUÉ dataset peruano (fuente) y cuántas filas.
+**Resumen:** Predicción numérica basada en el dataset peruano integrado (sentrybox_enaho2025.csv), procesando un total de 4,765 filas con control estricto de hashes y dependencias.
 
 ## Cómo reproducir
 Probado con **Python 3.13.3** en Windows (PowerShell).
@@ -56,7 +56,8 @@ Cinco semillas (`results/results_summary.csv`):
 
 **Resultado reportado:** MAE = 609.47 ± 9.58 (baseline: 631.08 ± 0.16).
 
-![Corridas en MLflow](docs/mlflow.png)
+![Corridas en MLflow - Parte 1](docs/mlflow_1.png)
+![Corridas en MLflow - Parte 2](docs/mlflow_2.png)
 
 ## Estructura de datos (data lake)
 | Zona | Carpeta | Contenido | Regla |
