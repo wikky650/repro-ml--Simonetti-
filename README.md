@@ -79,7 +79,7 @@ Ver `data/MANIFIESTO.md`.
 | Entorno exacto | Versiones fijadas en requirements.txt (numpy==2.3.4, pandas==2.3.3, scikit-learn==1.9.1, mlflow==3.18.0). |
 
 ## Prueba del extraño
-Quién la hizo (nombre y grupo), enlace al Issue y resultado.
+Sebastian Huanuco, grupo 2, enlace al Issue: [ (#1) ](https://github.com/wikky650/repro-ml--Simonetti-/issues/1).
 
 ## Limitaciones
 - Sensibilidad a diferencias en los saltos de línea (CRLF vs LF) al clonar repositorios en diferentes sistemas operativos (Windows y Linux).
@@ -94,4 +94,4 @@ Quién la hizo (nombre y grupo), enlace al Issue y resultado.
 6. La automatización mediante scripts modulares (`prepare_data`, `train`, `run_seeds`) elimina la intervención manual propensa a errores humanos durante la experimentación.
 
 ## Declaración de uso de IA
-Se utilizó Gemini como herramienta de asistencia para estructurar el entorno virtual en PowerShell, resolver incidencias de dependencias y configurar correctamente el archivo .gitignore y el pipeline de reproducibilidad. El autor ejecutó, verificó y validó personalmente cada comando y archivo de código.
+Se utilizó Gemini como herramienta de asistencia para estructurar el entorno virtual en PowerShell, resolver incidencias de dependencias y configurar correctamente el archivo .gitignore y el pipeline de reproducibilidad. Como autor ejecuté, verificé y validé personalmente cada comando y archivo de código.
