@@ -85,13 +85,24 @@ Sebastian Huanuco, grupo 2, enlace al Issue: [ (#1) ](https://github.com/wikky65
 - Sensibilidad a diferencias en los saltos de línea (CRLF vs LF) al clonar repositorios en diferentes sistemas operativos (Windows y Linux).
 - Dependencia del comportamiento determinista de las versiones específicas de las librerías instaladas en el entorno virtual.
 
-## Respuestas
-1. El control estricto de semillas y de la variable `PYTHONHASHSEED` garantiza que la aleatoriedad en la inicialización y división de datos sea exactamente idéntica en cada ejecución.
-2. La separación de zonas en el data lake (`raw`, `processed`, `results`) asegura la trazabilidad y evita la modificación accidental de los datos originales.
-3. El uso del hash MD5 permite verificar de forma criptográfica que todos los integrantes del equipo utilicen exactamente el mismo archivo fuente sin alterations.
-4. El modelo de árbol de decisión muestra una mejora marginal frente al baseline, reflejando las características de linealidad y dispersión del dataset de ENAHO.
-5. El registro de métricas con MLflow en formato local permite auditar las corridas de múltiples semillas de manera estructurada y persistente.
-6. La automatización mediante scripts modulares (`prepare_data`, `train`, `run_seeds`) elimina la intervención manual propensa a errores humanos durante la experimentación.
+## PREGUNTAS Y RESPUESTAS
+### 1. ¿Por qué el imputador y el escalador están dentro del Pipeline y no se aplican a todo el dataset antes de la validación cruzada?
+Porque aplicarlos antes a todo el dataset provocaría **fuga de información (*data leakage*)**, ya que estadísticas como la mediana o la media del conjunto de prueba influirían en el entrenamiento. Al integrarlos dentro del Pipeline, cada transformador se ajusta exclusivamente con los datos de entrenamiento de cada *fold*, garantizando una evaluación real, objetiva y sin sesgos optimistas.
+
+### 2. ¿Por qué el 20 % de prueba no se usa en este entregable? ¿Qué pasaría con su resultado si lo usara para elegir el modelo?
+No se usa porque este entregable se centra en la validación cruzada de desarrollo para comparar hiperparámetros y semillas de forma interna. Si usaras el conjunto de prueba para elegir el modelo, este quedaría **sobreajustado (*overfitting*) a esa prueba específica**, perdiendo su capacidad de generalización ante datos totalmente nuevos y anulando la validez estadística del test final.
+
+### 3. ¿Qué mide la desviación estándar entre las 5 semillas y qué NO mide?
+Mide la **estabilidad y robustez** del rendimiento del modelo ante distintas particiones y aleatoriedades iniciales del algoritmo. Sin embargo, **NO mide** los errores sistemáticos de los datos, la calidad de recolección de las variables ni los sesgos estructurales de la muestra original de la encuesta.
+
+### 4. ¿Su modelo supera al baseline en las 5 semillas? ¿La diferencia es mayor que la desviación estándar? ¿Qué concluye?
+Sí, el modelo de árbol de decisión supera de forma consistente al baseline en el MAE en las 5 semillas evaluadas (por ejemplo, reduciéndolo de 631.33 a 595.47 en la semilla 42). Al registrar mejoras estables en todas las ejecuciones, concluimos que el modelo captura patrones útiles y aporta una ventaja real frente al baseline.
+
+### 5. ¿Por qué el archivo de la zona raw no se modifica nunca y para qué sirve su MD5?
+El archivo en la zona *raw* **nunca se modifica para preservar la trazabilidad y la integridad** de los datos originales tal como fueron descargados. Su huella MD5 sirve como un código de verificación único para asegurar que el archivo no ha sufrido alteraciones accidentales ni corrupciones a lo largo del tiempo.
+
+### 6. ¿Por qué PYTHONHASHSEED=0 debe definirse antes de iniciar Python y no dentro del script?
+Porque las tablas hash internas de Python (como las de diccionarios o conjuntos) se aleatorizan al arrancar el proceso para prevenir ataques cibernéticos. Si se define dentro del script, **Python ya habrá inicializado la máquina virtual con un valor aleatorio**, por lo que declararlo antes a nivel de entorno es el único método efectivo para garantizar una reproducibilidad matemática estricta.
 
 ## Declaración de uso de IA
 Se utilizó Gemini como herramienta de asistencia para estructurar el entorno virtual en PowerShell, resolver incidencias de dependencias y configurar correctamente el archivo .gitignore y el pipeline de reproducibilidad. Como autor ejecuté, verificé y validé personalmente cada comando y archivo de código.
